@@ -1,0 +1,130 @@
+Listo, Kevin. Para que esto sea **real y usable para una bienvenida (sin internet)**, te recomiendo armarlo en 2 piezas:
+
+1. **“Mouse virtual” (control del cursor + clicks + scroll con la mano)**
+2. **“Modo juegos” (gestos → tecla Espacio / click sostenido)** para Dino y un clon tipo Geometry Dash.
+
+Abajo te dejo **repositorios concretos + pasos exactos**.
+
+---
+
+## 1) Repo recomendado para “mouse virtual” (mano → cursor)
+
+✅ **AppajiDheeraj/Virtual-Mouse** (MediaPipe + OpenCV + PyAutoGUI)
+Incluye **mover**, **click izq**, **click der**, **doble click**, **drag & drop** y **scroll**. ([GitHub][1])
+
+### Instalación (Windows)
+
+1. Instala Python 3.10+ (ideal 3.10/3.11)
+2. En PowerShell (o CMD):
+
+```bash
+git clone https://github.com/AppajiDheeraj/Virtual-Mouse.git
+cd Virtual-Mouse
+pip install opencv-python mediapipe pyautogui numpy
+python mouse.py
+```
+
+**Gestos (según el README):**
+
+* Índice arriba → mover cursor
+* Índice+medio juntos → click izquierdo
+* Pulgar+índice juntos → click derecho
+* Mano abierta (5 dedos) y subes/bajas → scroll ([GitHub][1])
+
+### Tips para que no falle en demo
+
+* Buena luz frontal (sin sombras duras).
+* Cámara fija (trípode o laptop estable).
+* Fondo simple (evita posters/manos de otros atrás).
+* Usa 720p si va lento.
+
+---
+
+## 2) Juego Dino offline (sin internet)
+
+Dos opciones buenas. La más simple para “abrir y jugar”:
+
+✅ **loparcog/chrome-dinosaur**
+Se juega abriendo un **HTML local** (control: **Flecha arriba**). ([GitHub][2])
+
+### Cómo dejarlo listo offline
+
+```bash
+git clone https://github.com/loparcog/chrome-dinosaur.git
+```
+
+Luego abre `dino.html` con Chrome (sin servidor, directo).
+
+---
+
+## 3) “Geometry Dash” en vivo (sin internet) — recomendación realista
+
+El Geometry Dash original es de pago y con derechos. Para tu bienvenida, lo más práctico es usar un **clon open-source**.
+
+✅ Opción A (web, probablemente fácil de levantar): **sillypantscoder/geometrydash**
+Tiene `index.html` en el repo (o sea, apunta a correr en navegador). ([GitHub][3])
+
+⚠️ Opción B (proyecto grande C++): **Open-GD/OpenGD**
+Peeero ellos mismos dicen que **los niveles no son jugables por ahora**. ([GitHub][4])
+(Para un evento, yo no lo elegiría.)
+
+---
+
+## 4) Lo clave para que “jueguen con manos”: Gesto → Tecla (Espacio / ↑)
+
+Para el Dino y para un clon tipo Geometry Dash, lo que más sirve es que tu programa detecte un gesto y mande:
+
+* **“salto” = tecla Espacio** (o flecha arriba)
+* opcional: “agacharse” = flecha abajo (si tu juego lo soporta)
+
+### La forma más rápida (hack efectivo)
+
+Modificar el `mouse.py` (del repo de Virtual-Mouse) para que cuando detecte “pinch” (pulgar+índice cerca) haga:
+
+```python
+import pyautogui, time
+# ...
+if pinch_detected and time.time() - last_jump > 0.25:
+    pyautogui.press('space')   # o 'up'
+    last_jump = time.time()
+```
+
+**Por qué funciona bien en evento:**
+
+* No dependes de apuntar con el cursor al botón exacto.
+* Solo necesitas **un gesto claro** para saltar.
+
+---
+
+## 5) Setup de bienvenida (modo “kiosko” para que todo sea fluido)
+
+1. PC/Laptop con cámara + luz.
+2. Abres el juego en pantalla completa (F11).
+3. Corres tu script de gestos.
+4. “Reglas de uso” pegadas en un cartel:
+
+   * “Levanta la mano para activar”
+   * “Pinch (pulgar+índice) = SALTAR”
+   * “Mano abierta = scroll (si están en menú)”
+
+---
+
+## Recomendación final (lo más robusto para tu caso)
+
+* **Mouse virtual base:** AppajiDheeraj/Virtual-Mouse ([GitHub][1])
+* **Dino offline:** loparcog/chrome-dinosaur (abre `dino.html`) ([GitHub][2])
+* **GD-like offline:** sillypantscoder/geometrydash (por tener `index.html`) ([GitHub][3])
+* **Para jugar cómodo:** agrega gesto → `pyautogui.press('space')`
+
+---
+
+Si me dices **en qué PC lo vas a correr (Windows 10/11, resolución de pantalla y si la cámara es integrada o externa)**, te ajusto los valores típicos de estabilidad (suavizado, umbrales y cooldown) para que no haya clicks/saltos fantasma en plena bienvenida.
+
+[1]: https://github.com/AppajiDheeraj/Virtual-Mouse "GitHub - AppajiDheeraj/Virtual-Mouse: Control your mouse using just your hand! This Python project uses MediaPipe, OpenCV, and PyAutoGUI to recognize hand gestures through a webcam and perform mouse actions like move, click, scroll, and drag."
+[2]: https://github.com/loparcog/chrome-dinosaur "GitHub - loparcog/chrome-dinosaur: Rough clone of the offline dinosaur game on the google chrome browser"
+[3]: https://github.com/sillypantscoder/geometrydash "GitHub - sillypantscoder/geometrydash: A Geometry Dash clone, because why not."
+[4]: https://github.com/Open-GD/OpenGD?utm_source=chatgpt.com "Open-GD/OpenGD"
+
+
+
+  taskkill /f /im mouse.exe
